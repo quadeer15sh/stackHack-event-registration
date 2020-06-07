@@ -1,0 +1,58 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="register">
+    {% if status == False %}
+    <div>
+        Edit form
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-12 col-12 pb-3">
+            <div style="height: 200px; border: 1px solid black;">
+                <center><img src="{{image_id}}" alt="" style="height: 100%; width: auto;"></center>
+            </div>
+        </div>
+        <div class="col-md-12 col-12">
+            <table class="table" style="width: 100%;">
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-user"></i> </td>
+                    <td id="name">{{name}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-music"></i> </td>
+                    <td id="name">{{event}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-phone"></i> </td>
+                    <td id="phone">{{phone}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-envelope"></i> </td>
+                    <td id="email">{{email}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-filter"></i> </td>
+                    <td id="type">{{type}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"><i class="fa fa-ticket"></i> </td>
+                    <td id="ticket">{{tickets}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <button class="col-md-4 col-12 btn btn-outline-info btn-md rounded-0" name="edit" type="submit"><span><i class="fa fa-edit"></i>
+                Edit</span></button>
+        <button class="col-md-4 col-12 btn btn-info btn-md rounded-0" name="submit" type="submit">Submit</button>
+    </form>
+    {% if status == 3 %}
+    <div class="alert alert-danger col-12" role="alert">
+        Email ID already exists
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

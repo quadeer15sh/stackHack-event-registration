@@ -1,0 +1,141 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="register">
+    <div class="row">
+        <h4>Preview</h4>
+        <div id="register_id" class="col-md-12 col-12 card shadow mb-5 bg-white rounded">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="card-img" src="{{code}}" alt="Your ID" style="width: 150; height: 150; margin: 10px;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{member.name}}</h5>
+                        <table class="container table">
+                            <tr>
+                                <td class="font-weight-bold"><i class="fa fa-music"></i> </td>
+                                <td>{{event.name}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold"><i class="fa fa-phone"></i> </td>
+                                <td>{{member.phone}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold"><i class="fa fa-envelope"></i> </td>
+                                <td>{{member.email}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold"><i class="fa fa-filter"></i> </td>
+                                <td>{{member.reg_type}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold"><i class="fa fa-ticket"></i> </td>
+                                <td>{{member.tickets}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold"># </td>
+                                <td class="text-success">{{member.reg_number}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-12 folium-map card shadow mb-5 bg-white rounded"
+            id="map_730b258ef32c4565be75a4f1346fb395"></div>
+        <div class="col-md-4 col-6">
+            <a id="btn-Convert-Html2Image" class="btn btn-outline-info btn-block text-info rounded-0">Save</a>
+        </div>
+        <div class="col-md-4 col-6">
+            <a href="{% url 'index' %}" class="btn btn-info btn-block text-white rounded-0">Back</a>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <div id="previewImage" hidden></div>
+</div>
+<script>
+    function printDiv() {
+        var divContents = document.getElementById("register_id").innerHTML;
+        var a = window.open('', '', 'height=500, width=500');
+        a.print();
+    }
+
+    $(document).ready(function () {
+
+        // Global variable 
+        var element = $("#register_id");
+
+        // Global variable 
+        var getCanvas;
+
+        $("#btn-Convert-Html2Image").on('click', function () {
+            html2canvas(element, {
+                onrendered: function (canvas) {
+                    $("#previewImage").append(canvas);
+                    getCanvas = canvas;
+                    var imgageData =
+                        getCanvas.toDataURL("image/png");
+
+                    // Now browser starts downloading 
+                    // it instead of just showing it 
+                    console.log(getCanvas);
+                    var newData = imgageData.replace(
+                        /^data:image\/png/, "data:application/octet-stream");
+                    $("#btn-Convert-Html2Image").attr(
+                        "download", "{{member.reg_number}}.png").attr(
+                            "href", newData);
+                }
+            });
+        });
+    });
+
+
+</script>
+<script>
+    var map_730b258ef32c4565be75a4f1346fb395 = L.map(
+        "map_730b258ef32c4565be75a4f1346fb395",
+        {
+            center: [{{ event.lat }}, {{ event.lng }}],
+    crs: L.CRS.EPSG3857,
+        zoom: 17,
+            zoomControl: true,
+                preferCanvas: false,
+        }
+    );
+
+    var tile_layer_e7d85b016cb0429aa67e788f2b8a86cc = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        { "attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false }
+    ).addTo(map_730b258ef32c4565be75a4f1346fb395);
+
+    var marker = L.marker(
+        [{{ event.lat }}, {{ event.lng }}],
+        {}
+    ).addTo(map_730b258ef32c4565be75a4f1346fb395);
+
+    var popup = L.popup({ "maxWidth": 2650 });
+    var html_7a486c5938504ec7b20ee24fc82d9189 = $(`<div 
+    id="html_7a486c5938504ec7b20ee24fc82d9189" style="width: 100.0%; height: 100.0%;">
+    <table class="table">
+    <tr>
+    <td><strong>Event Name:</strong></td>
+    <td>{{ event.name }}</td>
+    </tr>
+    <tr>
+    <td><strong>Event Date:</strong></td>
+    <td>{{ event.date }}</td>
+    </tr>
+    <tr>
+    <td><strong>Address:</strong></td>
+    <td>{{ event.address }}</td>
+    </tr>
+    </table>
+    </div>`)[0];
+    popup.setContent(html_7a486c5938504ec7b20ee24fc82d9189);
+    marker.bindPopup(popup);
+
+
+
+</script>
+{% endblock %}

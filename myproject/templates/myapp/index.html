@@ -1,0 +1,98 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="register">
+  <h2 class="mb-3">Event Registration</h2>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlInput1"><i class="fa fa-user"></i> Full Name</label>
+        <input type="text" name="name" class="form-control" id="userName" value="{{name}}" required>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlSelect1"><i class="fa fa-music"></i> Event</label>
+        <select class="form-control" name="event" id="event" required>
+          {% for event in events %}
+          <option value="{{event.name}}">{{event.name}} - {{event.date}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom: 3%;">
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlInput1"><i class="fa fa-envelope"></i> Email address</label>
+        <input type="email" name="email" class="form-control" value="{{email}}" required>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlInput1"><i class="fa fa-phone"></i> Phone Number</label>
+        <input type="tel" name="phone" class="form-control" value="{{phone}}" pattern="[0-9]{10}" required>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom: 3%;">
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlSelect1"><i class="fa fa-filter"></i> Type of
+          Registration</label>
+        <select class="form-control" name="type" id="typeId" onchange="selfTicket()" required>
+          <option selected="selected">Self</option>
+          <option>Group</option>
+          <option>Corporate</option>
+          <option>Others</option>
+        </select>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label for="exampleFormControlSelect1"><i class="fa fa-ticket"></i> Number of
+          Tickets</label>
+        <input type="number" id="ticketsId" name="tickets" class="form-control" min="1" max="10" required>
+      </div>
+    </div>
+    <div class="custom-file" style="margin-bottom: 3%">
+      <input type="file" name="file" class="custom-file-input" id="customFile" required>
+      <label class="custom-file-label" for="customFile">Upload ID Card</label>
+    </div>
+    <div class="form-row" style="margin-bottom: 3%;">
+      <div class="col-6">
+        <button type="submit" name="submit" class="btn btn-info btn-md btn-block rounded-0 mt-3">Next</button>
+      </div>
+    </div>
+    {% if status == 3 %}
+    <div class="alert alert-danger" role="alert">
+      Email ID already exists
+    </div>
+    {% elif status == 1 %}
+    <div class="alert alert-danger" role="alert">
+      No Faces Detected in ID
+    </div>
+    {% elif status == 2 %}
+    <div class="alert alert-danger" role="alert">
+      Name does not match with ID Name
+    </div>
+    {% endif %}
+  </form>
+</div>
+<script>
+  $('#customFile').on('change', function () {
+    //get the file name
+    var fileName = $(this).val();
+    //replace the "Choose a file" label
+    $(this).next('.custom-file-label').html(fileName);
+    console.log("Name: " + document.getElementById('userName').value);
+  });
+
+  function selfTicket() {
+    var type = document.getElementById('typeId').value;
+    console.log(type);
+    console.log(document.getElementById('ticketsId').value);
+
+    if (type == 'Self') {
+      document.getElementById("ticketsId").value = 1;
+      document.getElementById("ticketsId").max = 1;
+    }
+    else {
+      document.getElementById("ticketsId").max = 10;
+    }
+  }
+
+  selfTicket();
+</script>
+{% endblock %}
