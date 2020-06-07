@@ -148,11 +148,11 @@ def event(request):
 
     keys = ['name', 'email', 'phone', 'type', 'tickets', 'image_id']
 
-    # try:
-    #     for key in keys:
-    #         del request.session[key]
-    # except KeyError:
-    #     return redirect('index')
+    try:
+        for key in keys:
+            del request.session[key]
+    except KeyError:
+        return redirect('index')
 
     return render(request, "myapp/show.html", context)
 
